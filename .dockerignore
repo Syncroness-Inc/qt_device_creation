@@ -1,0 +1,8 @@
+downloads
+build-*
+sstate-cache
+.devcontainer
+.gitignore
+images
+READEME.md
+.repo

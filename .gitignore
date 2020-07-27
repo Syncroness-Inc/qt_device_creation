@@ -1,0 +1,8 @@
+downloads
+build-*
+sstate-cache
+.devcontainer
+tools
+.repo
+sources
+setup-environment.sh

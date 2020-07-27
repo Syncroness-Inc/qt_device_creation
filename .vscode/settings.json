@@ -1,0 +1,20 @@
+{
+    "editor.rulers": [
+    120
+    ],
+    
+    "files.watcherExclude": {
+        "**/.repo": true,
+        "**/downloads": true,
+        "**/meta*": true,
+        "**/poky": true,
+        "**/source": true,
+        "**/sstate-cache": true,
+        "**/tmp": true
+    },
+    "files.exclude": {
+        "**/.repo": true,
+        "**/downloads": true,
+        "**/sstate-cache": true
+    }
+}
