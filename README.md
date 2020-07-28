@@ -16,9 +16,11 @@ See:
 Don't open this directory within VSCode after your linux kernel has been built or until these issues have been closed.
 
 # Prerequisites
-Install docker for your system. Instructions can be found here: https://duckduckgo.com/?q=docker+linux+install&t=canonical&atb=v216-1.
+- Install docker for your system. Instructions can be found here: https://duckduckgo.com/?q=docker+linux+install&t=canonical&atb=v216-1.
 
-We use docker to ensure that the tools used to compile our linux kernel remain the same between builds.
+    We use docker to ensure that the tools used to compile our linux kernel remain the same between builds.
+
+- Developers must have 
 
 
 # Steps to create an image and cross platform tools
@@ -50,7 +52,7 @@ We use docker to ensure that the tools used to compile our linux kernel remain t
     |         Toradex Colibri iMX7         |  colibri-imx7   |
     |                WaRP7                 |   imx7s-warp    |
 
-3. Build the Container using the following commands.
+3. Build the image using the following commands.
    ```bash
    cd <Directory containing dockerfile>
    docker build -t qt_device_creation:1.0 .
@@ -70,12 +72,12 @@ We use docker to ensure that the tools used to compile our linux kernel remain t
     repo init -u git://code.qt.io/yocto/boot2qt-manifest -m v5.15.0.xml
     repo sync
     ```
-6. Inside the docker container, initialize the environment.
+6. Inside the docker container, initialize the environment to be able to use the bitbake tool.
 
     ```bash
     source ./setup-environment.sh
     ```
-    You should see the following ouput
+    You should see the following output
 
     ```txt
     ### Shell environment set up for builds. ###
@@ -95,7 +97,7 @@ We use docker to ensure that the tools used to compile our linux kernel remain t
     For more information about Boot to Qt, see https://doc.qt.io/QtForDeviceCreation/
     ```
  
-7. Run the bitbake command to build our image
+7. Run the bitbake command to build the embedded linux image.
     ```bash
     bitbake b2qt-embedded-qt5-image
     ```
@@ -113,6 +115,8 @@ We use docker to ensure that the tools used to compile our linux kernel remain t
     ```
 
 10. You need to flash the device you wish to deploy Qt applications to. Flashing instructions can vary between devices so consult the flashing instructions for your piece of hardware. You can find the image to be flashed at  `<docker file directory>/build-<your machine>/tmp/deploy/images/<your machine>`.
+
+    Note: It may be worth adding the mender.io layer for over the air updates to the custom embedded linux image.
 
 11. You should find the `<docker file directory>/build-<your machine>/tmp/sdk/b2qt-x86_64-meta-toolchain-b2qt-embedded-qt5-sdk-<your machine>.sh` file. This is a self contained script that will install any dependencies for cross platform development. Move this file to the repo where developers are going to be working on the GUI application.
 
@@ -139,7 +143,7 @@ These instructions are are to be followed by all developers working on the GUI a
 
 # Known Issues/Needed Tweaks
 1. In order to deploy the application, no other Qt processes should be running. You may need to remote into the machine an kill any running Qt processes.
-2. You are able to ssh into the device as root without being prompted for a password or having keys set.
+2. You are able to ssh into the device as root without being prompted for a password or having keys set. This should be changed within the yocto recipes.
 
 
 # Additional Resources
