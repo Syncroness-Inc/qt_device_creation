@@ -1,9 +1,10 @@
 # Introduction
 The purpose of this repository is to provide instructions on how to...
-1. Use yocto to build a linux kernel to support QT applications.
+1. Use yocto to build a linux kernel to support Qt applications.
 2. Compile and deploy tools necessary for cross platform development.
+3. Install the tools and have them integrate with Qt Creator.
 
-The following instructions have been slightly modified from the QT website.
+The following instructions have been slightly modified from the Qt website.
 https://doc.qt.io/QtForDeviceCreation/qtee-custom-embedded-linux-image.html
 
 Notes:
@@ -12,11 +13,12 @@ See:
 - https://github.com/microsoft/vscode/issues/3998
 - https://github.com/Microsoft/vscode/issues/61393
 
-Don't open this directory within VSCode until resolved.
+Don't open this directory within VSCode after your linux kernel has been built or until these issues have been closed.
 
 # Prerequisites
-Install docker for your system. Instructions can be found here: https://duckduckgo.com/?q=docker+linux+install&t=canonical&atb=v216-1
-We use docker to ensure that the tools used to compile our Linux Kernel remain the same between builds.
+Install docker for your system. Instructions can be found here: https://duckduckgo.com/?q=docker+linux+install&t=canonical&atb=v216-1.
+
+We use docker to ensure that the tools used to compile our linux kernel remain the same between builds.
 
 
 # Steps to create an image and cross platform tools
@@ -53,7 +55,7 @@ We use docker to ensure that the tools used to compile our Linux Kernel remain t
    cd <Directory containing dockerfile>
    docker build -t qt_device_creation:1.0 .
    ```
-4. Run the following command to start a container within the image context
+4. Run the following command to start a container.
     ```bash
     docker run \
         --rm \
@@ -63,7 +65,7 @@ We use docker to ensure that the tools used to compile our Linux Kernel remain t
         qt_device_creation:1.0 \
         --workdir=/workspaces/qt_device_creation
     ```
-5. Inside the docker container, fetch the starting recipes for the various platforms. 
+5. Inside the docker container, fetch the Qt starting recipes for the various hardware platforms. 
     ```bash
     repo init -u git://code.qt.io/yocto/boot2qt-manifest -m v5.15.0.xml
     repo sync
@@ -110,20 +112,20 @@ We use docker to ensure that the tools used to compile our Linux Kernel remain t
     exit
     ```
 
-10. You need to flash the device you wish to deploy QT applications to. Flashing instructions can vary between devices so consult the flashing instructions for your piece of hardware. You can find the image to be flashed at  `<docker file directory>/build-<your machine>/tmp/deploy/images/<your machine>`.
+10. You need to flash the device you wish to deploy Qt applications to. Flashing instructions can vary between devices so consult the flashing instructions for your piece of hardware. You can find the image to be flashed at  `<docker file directory>/build-<your machine>/tmp/deploy/images/<your machine>`.
 
 11. You should find the `<docker file directory>/build-<your machine>/tmp/sdk/b2qt-x86_64-meta-toolchain-b2qt-embedded-qt5-sdk-<your machine>.sh` file. This is a self contained script that will install any dependencies for cross platform development. Move this file to the repo where developers are going to be working on the GUI application.
 
 # Installation Instructions
 These instructions are are to be followed by all developers working on the GUI application on their linux development environment. They are intended to get developers to be able to use the cross platform tools that were created and push changes to the development machine.
 
-1. Run the `b2qt-x86_64-meta-toolchain-b2qt-embedded-qt5-sdk-<your machine>.sh` script. Note, the script will ask you to specify a directory where to install the cross platform tools, it is suggested to create a tools directory contained within the repo where the GUI application will be developed and add the tools directory to the `.gitignore`. This way you don't forget to uninstall the tools once you are done with the project.
+1. Run the `b2qt-x86_64-meta-toolchain-b2qt-embedded-qt5-sdk-<your machine>.sh` script. Note, the script will ask you to specify a directory where to install the cross platform tools. It is suggested to create a tools directory contained within the repo where the GUI application will be developed and add the tools directory to the `.gitignore`. This way you don't forget to uninstall the tools once you are done with the project.
 
 2. Create a Qt kit by navigating to where the cross platform tools were installed and run the following script. 
     ```bash
     sudo ./configure-qtcreator.sh --qtcreator <your qt creator path>
     ```
-    A kit to cross compile the device should now appear within QT creater.
+    A kit to cross compile the device should now appear within Qt creater.
 
 3. Refer to the following instructions to add the device within Qt creator so you can copy files and ssh into the target device.
 
@@ -142,7 +144,7 @@ These instructions are are to be followed by all developers working on the GUI a
 
 # Additional Resources
 
-All Qt does is add its own layers to within yocto. To understand yocto more, feel free to refer to the following documentation.
+All Qt does is add its own yocto meta layers. To understand yocto more, feel free to refer to the following documentation.
 - https://www.yoctoproject.org/
 
 To fetch and manage all of the git repos to build the kernel, it is suggested you use the `repo` tool (`repo` is installed in the docker file). 
